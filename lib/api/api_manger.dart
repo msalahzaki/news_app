@@ -16,7 +16,7 @@ class ApiManger {
    var json = jsonDecode(response.body);
    return SourceResponse.fromJson(json);}
        catch(e){
-     throw(e);
+     rethrow;
        }
  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/api/api_manger.dart';
 import 'package:news_app/model/SourceResponse.dart';
+import 'package:news_app/ui/home/category/source_tab_widget.dart';
 
 class CategoryDetails extends StatelessWidget {
   const CategoryDetails({super.key});
@@ -30,12 +31,10 @@ class CategoryDetails extends StatelessWidget {
                Text(snapshot.data!.message??""),
         ElevatedButton(onPressed: () {}, child: const Text("Try Again"))
         ],);
-        }else{
-        var sources = snapshot.data!.sources;
-        return ListView.builder(itemBuilder:(context, index) {
-          return Text(sources![index].name!);
-        },);
-      }
+        }else {
+          var sources = snapshot.data!.sources;
+          return SourceTabWidget(sourcesList: sources!);
+        }
       }
     );
       }
