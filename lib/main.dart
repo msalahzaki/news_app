@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/home.dart';
+import 'package:news_app/ui/home/category/category_details.dart';
+import 'package:news_app/ui/home/home.dart';
 import 'package:news_app/providers/language_provider.dart';
 import 'package:news_app/providers/theme_provider.dart';
 import 'package:news_app/utils/app_theme.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
@@ -21,10 +23,14 @@ class MyApp extends StatelessWidget {
     var languageProvider = Provider.of<LanguageProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       darkTheme: AppTheme.darktheme,
       theme: AppTheme.lighttheme,
       themeMode: themeProvider.theme,
-      home: const Home(),
+      home: const CategoryDetails(),
+      locale: Locale(languageProvider.language),
+
     );
   }
 }

@@ -1,0 +1,21 @@
+{
+  "english": "الانجليزية",
+  "arabic": "العربية",
+  "language": "اللغة",
+  "theme": "النمط",
+  "light": "مضئ",
+  "dark": "مظلم",
+  "home": "الرئيسية",
+  "good_morning": "صباح الخير",
+  "here_is_some_fews_for_you": "اليك بعض الاخبار",
+  "general": "عام",
+  "business": "اقتصاد",
+  "health": "صحة",
+  "entertainment": "ترفيه",
+  "science" : "علوم",
+  "technology" : "تكنولوجيا",
+  "sports" : "رياضة",
+  "view_all" : "اعرض الكل",
+  "view_full_articel" : "كامل المقال",
+  "search" : "بحث"
+}

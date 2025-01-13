@@ -1,0 +1,23 @@
+{
+  "english": "English",
+  "arabic": "Arabic",
+  "language": "Language",
+  "theme": "Theme",
+  "light": "Light",
+  "dark": "Dark",
+  "home": "Home",
+
+  "good_morning": "Good Morning",
+  "here_is_some_fews_for_you": "Here is Some News For You",
+"general": "General",
+  "business": "Business",
+  "health": "Health",
+  "entertainment": "Entertainment",
+  "science" : "Science",
+  "technology" : "Technology",
+  "sports" : "Sports",
+  "view_all" : "View All",
+  "view_full_articel" : "View Full Articel",
+  "search" : "Search"
+
+}
