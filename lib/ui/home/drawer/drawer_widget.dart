@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:news_app/providers/theme_provider.dart';
+import 'package:news_app/ui/home/home.dart';
 import 'package:news_app/utils/app_color.dart';
 import 'package:news_app/utils/app_styles.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +44,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             style: AppStyles.bold24black,
           ),
         ),
-        DrawerItem(text: local.go_home_page, icon: Icons.home_outlined),
+        InkWell(onTap: () {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home(),));
+        },
+            child: DrawerItem(
+                text: local.go_home_page, icon: Icons.home_outlined)),
         const Divider(
           color: AppColor.white,
           thickness: 1.5,
@@ -82,7 +87,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   }
 
   void changeTheme(String newTheme) {
-    if (newTheme == "Light") {
+    if (newTheme == local.light) {
       themeProvider.changeTheme(ThemeMode.light);
     } else {
       themeProvider.changeTheme(ThemeMode.dark);
