@@ -25,7 +25,6 @@ class CategoryDetails extends StatelessWidget {
           );
         }
         else if(snapshot.data!.status != "ok"){
-
           return Column(
               children: [
                Text(snapshot.data!.message??""),
