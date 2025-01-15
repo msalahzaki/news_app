@@ -12,6 +12,7 @@ class NewsItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8),
       padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -38,7 +39,7 @@ class NewsItemWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "By ${(news.author!.length > 10) ? news.author!.substring(0, 10) : news.author!}",
+                "By ${(news.author != null && news.author!.length > 10) ? news.author!.substring(0, 10) : news.author ?? ""}",
                 style: AppStyles.normal12grey,
               ),
               Text(

@@ -17,7 +17,7 @@ class _Sources_widgetState extends State<Sources_widget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<SourceResponse>(
-        future: ApiManger.getSources(),
+        future: ApiManger.getSources(widget.categoryModel.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(

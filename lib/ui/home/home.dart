@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
   void changeHomeWidget(Widget newWidget, CategoryModel category) {
     setState(() {
       currentWidget = newWidget;
-      this.appBarTitle = category.title;
+      appBarTitle = category.title;
     });
   }
 }

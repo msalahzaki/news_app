@@ -7,11 +7,8 @@ import 'package:news_app/model/Newsmodel.dart';
 import 'package:news_app/model/SourceResponse.dart';
 
 class ApiManger {
-
- static Future<SourceResponse> getSources()async{
-   Uri url = Uri.https(ApiConst.baseURL, EndPoints.sourceApi,{
-     'apiKey':ApiConst.apiKey
-   });
+  static Future<SourceResponse> getSources(String categoryID) async {
+    Uri url = Uri.https(ApiConst.baseURL, EndPoints.sourceApi,{'apiKey': ApiConst.apiKey, 'category': categoryID});
    try{
    var response = await http.get(url);
    var json = jsonDecode(response.body);

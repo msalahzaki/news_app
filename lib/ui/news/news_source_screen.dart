@@ -38,6 +38,9 @@ class _NewsSourceScreenState extends State<NewsSourceScreen> {
               indicatorColor: Theme.of(context).colorScheme.secondary,
               dividerColor: AppColor.transpernt,
             )),
+        SizedBox(
+          height: 10,
+        ),
         Expanded(child: NewsWidget(source: widget.sourcesList[selectedIndex])),
       ],
     );
