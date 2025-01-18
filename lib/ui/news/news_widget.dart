@@ -21,11 +21,9 @@ class NewsWidget extends StatefulWidget {
 
 class _NewsWidgetState extends State<NewsWidget> {
   late NewsProvider newsProvider;
-  final ScrollController _scrollController = ScrollController();
   int page = 1;
-
   bool isEnd = true;
-
+  bool loadingMoreNews = false;
   @override
   void initState() {
     super.initState();
@@ -33,7 +31,6 @@ class _NewsWidgetState extends State<NewsWidget> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -49,8 +46,10 @@ class _NewsWidgetState extends State<NewsWidget> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting &&
               page == 1) {
-            return const Center(
-              child: CircleAvatar(),
+            return const Expanded(
+              child: Center(
+                child: CircleAvatar(),
+              ),
             );
           } else if (snapshot.hasError) {
             return Column(
@@ -75,12 +74,12 @@ class _NewsWidgetState extends State<NewsWidget> {
               ],
             );
           } else {
-            // news.addAll(snapshot.data!.articles!);
             if (snapshot.data!.articles != null &&
                 snapshot.data!.articles!.isNotEmpty &&
                 snapshot.connectionState != ConnectionState.waiting) {
               Provider.of<NewsProvider>(context, listen: false)
                   .addMoreEvent(snapshot.data!.articles!);
+              loadingMoreNews = false;
               // newsProvider.addMoreEvent(snapshot.data!.articles!);
 
               if (snapshot.data!.articles!.length < 100) {
@@ -90,9 +89,7 @@ class _NewsWidgetState extends State<NewsWidget> {
               }
             }
             return ListView.builder(
-                controller: _scrollController,
                 itemBuilder: (context, index) {
-                  print(index.toString());
                   if (index < newsProvider.news.length) {
                     return NewsItemWidget(news: newsProvider.news[index]);
                   } else {
@@ -101,9 +98,13 @@ class _NewsWidgetState extends State<NewsWidget> {
                             onPressed: () {
                               _onScroll();
                             },
-                            child: Text("Load More ....."),
+                            child: loadingMoreNews
+                                ? const Center(
+                                    child: CircleAvatar(),
+                                  )
+                                : const Text("Load More ....."),
                           )
-                        : SizedBox();
+                        : const SizedBox();
                   }
                 },
                 itemCount: newsProvider.news.length + 1);
@@ -112,13 +113,8 @@ class _NewsWidgetState extends State<NewsWidget> {
   }
 
   void _onScroll() async {
-    // newsProvider.addMoreEvent(widget.source.id!, page);
     page++;
+    loadingMoreNews = true;
     setState(() {});
-    // var newsModel = await ApiManger.getNewsBySourceID(widget.source.id!, page);
-    // var newNews  = newsModel.articles;
-    // if(newNews !=null ) {
-    //   newsProvider.addMoreEvent(newNews);
-    // }
   }
 }
