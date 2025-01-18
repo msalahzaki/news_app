@@ -8,24 +8,33 @@ import 'package:news_app/model/SourceResponse.dart';
 
 class ApiManger {
   static Future<SourceResponse> getSources(String categoryID) async {
-    Uri url = Uri.https(ApiConst.baseURL, EndPoints.sourceApi,{'apiKey': ApiConst.apiKey, 'category': categoryID});
-   try{
-   var response = await http.get(url);
-   var json = jsonDecode(response.body);
-   return SourceResponse.fromJson(json);}
-       catch(e){
-     rethrow;
-       }
- }
+    Uri url = Uri.https(ApiConst.baseURL, EndPoints.sourceApi,
+        {'apiKey': ApiConst.apiKey, 'category': categoryID});
+    try {
+      var response = await http.get(url);
+      var json = jsonDecode(response.body);
+      return SourceResponse.fromJson(json);
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-  static Future<Newsmodel> getNewsBySourceID(String sourceID) async {
+  static Future<Newsmodel> getNewsBySourceID(String sourceID, int page) async {
     Uri url = Uri.https(ApiConst.baseURL, EndPoints.newsApi,
-        {'apiKey': ApiConst.apiKey, 'sources': sourceID});
+        {'apiKey': ApiConst.apiKey, 'sources': sourceID, 'page': '$page'});
+    print(url);
+    var response = await http.get(url);
+    return Newsmodel.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<Newsmodel> getNewsBySearch(String searchKey, int page) async {
+    Uri url = Uri.https(ApiConst.baseURL, EndPoints.newsApi,
+        {'apiKey': ApiConst.apiKey, 'q': searchKey, 'page': '$page'});
+    print(url);
     var response = await http.get(url);
     return Newsmodel.fromJson(jsonDecode(response.body));
   }
 }
-
 /*
 var url = Uri.https('example.com', 'whatsit/create');
 var response = await http.post(url, body: {'name': 'doodle', 'color': 'blue'});

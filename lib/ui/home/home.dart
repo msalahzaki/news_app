@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:news_app/model/category_model.dart';
 import 'package:news_app/ui/home/home_screen.dart';
+import 'package:news_app/ui/news/news_search.dart';
 import 'package:news_app/utils/app_color.dart';
 
 import 'drawer/drawer_widget.dart';
@@ -38,7 +39,15 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title:  Text(appBarTitle),
         centerTitle: true,
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => NewsSearch(),
+                ));
+              },
+              icon: const Icon(Icons.search))
+        ],
       ),
       body: currentWidget,
     );

@@ -44,6 +44,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  url_launcher: ^6.3.1
+  cached_network_image: ^3.4.1
+  get_time_ago:
 
 dev_dependencies:
   flutter_test:
