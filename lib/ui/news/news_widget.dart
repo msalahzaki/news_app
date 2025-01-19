@@ -48,7 +48,7 @@ class _NewsWidgetState extends State<NewsWidget> {
               page == 1) {
             return const Expanded(
               child: Center(
-                child: CircleAvatar(),
+                child: CircularProgressIndicator(),
               ),
             );
           } else if (snapshot.hasError) {
@@ -100,7 +100,7 @@ class _NewsWidgetState extends State<NewsWidget> {
                             },
                             child: loadingMoreNews
                                 ? const Center(
-                                    child: CircleAvatar(),
+                                    child: CircularProgressIndicator(),
                                   )
                                 : const Text("Load More ....."),
                           )

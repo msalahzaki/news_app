@@ -13,7 +13,8 @@ final Function ()ontap ;
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return  Directionality (textDirection: isLeft ? TextDirection.ltr: TextDirection.rtl,
-      child: Container(margin: EdgeInsets.symmetric(vertical: 4),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4),
         height: size.height*.25,
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
@@ -24,13 +25,19 @@ final Function ()ontap ;
           children: [
             Transform.rotate(
                 angle: 0,
-                child: Image.asset(imageUrl,width: size.width*.5,fit: BoxFit.cover,)),
+                child: Image.asset(
+                  imageUrl,
+                  width: size.width * .55,
+                  fit: BoxFit.cover,
+                )),
             Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
                   text,
-                  style: AppStyles.bold24white
-                      .copyWith(color: Theme.of(context).primaryColor,fontSize: 28,overflow:TextOverflow.ellipsis ),
+                  style: AppStyles.bold24white.copyWith(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: size.width * .055,
+                      overflow: TextOverflow.ellipsis),
                 ),
                 InkWell(onTap: ontap,
                   child: Container(

@@ -26,6 +26,7 @@ class _NewsSearchState extends State<NewsSearch> {
         child: Column(
           children: [
             TextField(
+              onTap: getSeacrhedData,
               controller: searchEditingController,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
