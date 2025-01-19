@@ -16,6 +16,7 @@ class _NewsSearchState extends State<NewsSearch> {
   TextEditingController searchEditingController = TextEditingController();
   List<News> news = [];
   String status = "";
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,9 @@ class _NewsSearchState extends State<NewsSearch> {
         child: Column(
           children: [
             TextField(
-              onTap: getSeacrhedData,
+              onEditingComplete: () {
+                getSeacrhedData();
+              },
               controller: searchEditingController,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -44,17 +47,19 @@ class _NewsSearchState extends State<NewsSearch> {
                       icon: const Icon(Icons.close)),
                   hintText: "Search"),
             ),
-            if (news.isEmpty)
-              Expanded(child: Center(child: Text(status)))
-            else
-              Expanded(
-                child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      print(index.toString());
-                      return NewsItemWidget(news: news[index]);
-                    },
-                    itemCount: news.length),
-              )
+            isLoading
+                ? const Expanded(
+                    child: Center(child: CircularProgressIndicator()))
+                : news.isEmpty
+                    ? Expanded(child: Center(child: Text(status)))
+                    : Expanded(
+                        child: ListView.builder(
+                            itemBuilder: (context, index) {
+                              print(index.toString());
+                              return NewsItemWidget(news: news[index]);
+                            },
+                            itemCount: news.length),
+                      ),
           ],
         ),
       )),
@@ -62,17 +67,20 @@ class _NewsSearchState extends State<NewsSearch> {
   }
 
   void getSeacrhedData() async {
+    isLoading = true;
+    setState(() {});
     String searchText = searchEditingController.text;
     if (searchText.isNotEmpty) {
       Newsmodel newsModel = await ApiManger.getNewsBySearch(searchText, 1);
       if (newsModel.status == "ok" && newsModel.articles!.isNotEmpty) {
         news = newsModel.articles!;
       } else {
-        status = "No Search item";
+        status = "No News Founded ";
       }
     } else {
-      status = "Please Enter Search value";
+      status = "Please Enter valid Search key ";
     }
+    isLoading = false;
     setState(() {});
   }
 }

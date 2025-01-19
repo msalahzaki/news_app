@@ -4,16 +4,16 @@ import 'package:news_app/model/SourceResponse.dart';
 import 'package:news_app/model/category_model.dart';
 import 'package:news_app/ui/news/news_source_screen.dart';
 
-class Sources_widget extends StatefulWidget {
-  const Sources_widget({super.key, required this.categoryModel});
+class SourcesWidget extends StatefulWidget {
+  const SourcesWidget({super.key, required this.categoryModel});
 
   final CategoryModel categoryModel;
 
   @override
-  State<Sources_widget> createState() => _Sources_widgetState();
+  State<SourcesWidget> createState() => _Sources_widgetState();
 }
 
-class _Sources_widgetState extends State<Sources_widget> {
+class _Sources_widgetState extends State<SourcesWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<SourceResponse>(

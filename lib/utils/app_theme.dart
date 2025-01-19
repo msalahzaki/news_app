@@ -26,6 +26,8 @@ class AppTheme {
       enabledBorder: dropMenuBorder(borderColor: AppColor.black),
       focusedBorder: dropMenuBorder(borderColor: AppColor.black),
     ),
+    progressIndicatorTheme:
+        ProgressIndicatorThemeData(color: AppColor.semiblack),
   );
 
   static ThemeData darktheme = ThemeData(
@@ -51,6 +53,8 @@ class AppTheme {
       enabledBorder: dropMenuBorder(),
       focusedBorder: dropMenuBorder(),
     ),
+    progressIndicatorTheme:
+        ProgressIndicatorThemeData(color: AppColor.semiblack),
   );
 
   static OutlineInputBorder dropMenuBorder(

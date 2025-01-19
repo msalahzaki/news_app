@@ -23,20 +23,18 @@ final Function ()ontap ;
         ),
         child: Row(
           children: [
-            Transform.rotate(
-                angle: 0,
-                child: Image.asset(
-                  imageUrl,
-                  width: size.width * .55,
-                  fit: BoxFit.cover,
-                )),
+            Image.asset(
+              imageUrl,
+              width: size.width * .50,
+              fit: BoxFit.cover,
+            ),
             Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
                   text,
                   style: AppStyles.bold24white.copyWith(
                       color: Theme.of(context).primaryColor,
-                      fontSize: size.width * .055,
+                      fontSize: size.width * .05,
                       overflow: TextOverflow.ellipsis),
                 ),
                 InkWell(onTap: ontap,

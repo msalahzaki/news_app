@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
                     Provider.of<NewsProvider>(context, listen: false)
                         .initnews();
                     navigateNewScreen(
-                        Sources_widget(categoryModel: categoryList[index]),
+                        SourcesWidget(categoryModel: categoryList[index]),
                         categoryList[index]);
                   });
             },
