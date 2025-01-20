@@ -3,9 +3,6 @@ import 'package:news_app/model/SourceResponse.dart';
 import 'package:news_app/ui/home/sources_items/source_name_item.dart';
 import 'package:news_app/ui/news/news_widget.dart';
 import 'package:news_app/utils/app_color.dart';
-import 'package:provider/provider.dart';
-
-import '../../providers/news_provider.dart';
 
 class NewsSourceScreen extends StatefulWidget {
   const NewsSourceScreen({super.key, required this.sourcesList});
@@ -34,7 +31,7 @@ class _NewsSourceScreenState extends State<NewsSourceScreen> {
               }).toList(),
               onTap: (index) {
                 selectedIndex = index;
-                Provider.of<NewsProvider>(context, listen: false).initnews();
+                // Provider.of<NewsWidgetViewmodel>(context, listen: false).changeSource(widget.sourcesList[selectedIndex].id!);
                 setState(() {});
               },
               isScrollable: true,

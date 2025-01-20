@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/api/api_manger.dart';
-import 'package:news_app/model/SourceResponse.dart';
 import 'package:news_app/model/category_model.dart';
+import 'package:news_app/ui/home/sources_items/source_widget_viewmodel.dart';
 import 'package:news_app/ui/news/news_source_screen.dart';
+import 'package:provider/provider.dart';
 
 class SourcesWidget extends StatefulWidget {
   const SourcesWidget({super.key, required this.categoryModel});
@@ -10,13 +10,51 @@ class SourcesWidget extends StatefulWidget {
   final CategoryModel categoryModel;
 
   @override
-  State<SourcesWidget> createState() => _Sources_widgetState();
+  State<SourcesWidget> createState() => _SourcesWidgetState();
 }
 
-class _Sources_widgetState extends State<SourcesWidget> {
+class _SourcesWidgetState extends State<SourcesWidget> {
+  SourceWidgetViewmodel viewmodel = SourceWidgetViewmodel();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    viewmodel.getSourcesByCategoryID(widget.categoryModel.id);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<SourceResponse>(
+    return ChangeNotifierProvider(
+      create: (context) => viewmodel,
+      child: Consumer<SourceWidgetViewmodel>(
+        builder: (context, viewmodel, child) {
+          if (viewmodel.errorMessage != null) {
+            return Column(
+              children: [
+                const Text("SomeThing Wrong"),
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {});
+                    },
+                    child: const Text("Try Again"))
+              ],
+            );
+          } else if (viewmodel.sources == null) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return NewsSourceScreen(
+              sourcesList: viewmodel.sources!,
+            );
+          }
+        },
+      ),
+    );
+
+    /*
+      FutureBuilder<SourceResponse?>(
         future: ApiManger.getSources(widget.categoryModel.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -49,6 +87,6 @@ class _Sources_widgetState extends State<SourcesWidget> {
             var sources = snapshot.data!.sources;
             return NewsSourceScreen(sourcesList: sources!);
           }
-        });
+        });*/
   }
 }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/providers/news_provider.dart';
 import 'package:news_app/ui/news/news_item_widget.dart';
+import 'package:news_app/ui/news/news_widget_viewModel.dart';
 import 'package:provider/provider.dart';
 
-import '../../api/api_manger.dart';
-import '../../model/Newsmodel.dart';
 import '../../model/SourceResponse.dart';
 
 class NewsWidget extends StatefulWidget {
@@ -20,13 +19,13 @@ class NewsWidget extends StatefulWidget {
 }
 
 class _NewsWidgetState extends State<NewsWidget> {
+  late NewsWidgetViewmodel viewmodel = NewsWidgetViewmodel();
   late NewsProvider newsProvider;
-  int page = 1;
-  bool isEnd = true;
-  bool loadingMoreNews = false;
+
   @override
   void initState() {
     super.initState();
+    viewmodel.getNewsBySourceID(widget.source.id!);
   }
 
   @override
@@ -37,19 +36,48 @@ class _NewsWidgetState extends State<NewsWidget> {
   @override
   Widget build(BuildContext context) {
     newsProvider = Provider.of<NewsProvider>(context);
+
     if (newsProvider.news.isEmpty) {
-      page = 1;
+      viewmodel.page = 1;
     }
 
-    return FutureBuilder<Newsmodel>(
+    return ChangeNotifierProvider(
+        create: (context) => viewmodel,
+        child:
+            Consumer<NewsWidgetViewmodel>(builder: (context, viewmodel, child) {
+          if (viewmodel.errorMessage != null) {
+            return Column(
+              children: [
+                const Text("SomeThing Wrong"),
+                ElevatedButton(
+                    onPressed: () {
+                      setState(() {});
+                    },
+                    child: const Text("Try Again"))
+              ],
+            );
+          } else if (viewmodel.news == null) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return ListView.builder(
+                itemCount: viewmodel.news!.length,
+                itemBuilder: (context, index) {
+                  return NewsItemWidget(news: viewmodel.news![index]);
+                });
+          }
+        }));
+  }
+}
+/*
+      FutureBuilder<Newsmodel?>(
         future: ApiManger.getNewsBySourceID(widget.source.id!, page),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting &&
               page == 1) {
-            return const Expanded(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
             return Column(
@@ -110,11 +138,4 @@ class _NewsWidgetState extends State<NewsWidget> {
                 itemCount: newsProvider.news.length + 1);
           }
         });
-  }
-
-  void _onScroll() async {
-    page++;
-    loadingMoreNews = true;
-    setState(() {});
-  }
-}
+        */
