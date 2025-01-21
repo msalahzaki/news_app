@@ -4,7 +4,7 @@ import 'package:news_app/model/SourceResponse.dart';
 
 class SourceWidgetViewmodel extends ChangeNotifier {
   List<Sources>? sources;
-
+  Sources? currentSource;
   String? errorMessage;
 
   getSourcesByCategoryID(String categoryID) async {
@@ -16,8 +16,14 @@ class SourceWidgetViewmodel extends ChangeNotifier {
         errorMessage = response.message;
       } else {
         sources = response.sources!;
+        currentSource = sources![0];
       }
       notifyListeners();
     } catch (e) {}
+  }
+
+  changeSource(int sourceIndex) async {
+    currentSource = sources![sourceIndex];
+    notifyListeners();
   }
 }

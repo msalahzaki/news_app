@@ -4,9 +4,6 @@ import 'package:news_app/model/category_model.dart';
 import 'package:news_app/ui/home/sources_items/sources_widget.dart';
 import 'package:news_app/ui/home/widget/home_category_widget.dart';
 import 'package:news_app/utils/app_styles.dart';
-import 'package:provider/provider.dart';
-
-import '../../providers/news_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key, required this.navigateNewScreen});
@@ -42,8 +39,6 @@ class HomeScreen extends StatelessWidget {
                   imageUrl: categoryList[index].imagePath,
                   isLeft: index % 2 == 0,
                   ontap: () {
-                    Provider.of<NewsProvider>(context, listen: false)
-                        .initnews();
                     navigateNewScreen(
                         SourcesWidget(categoryModel: categoryList[index]),
                         categoryList[index]);

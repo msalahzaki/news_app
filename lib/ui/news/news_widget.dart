@@ -23,6 +23,17 @@ class _NewsWidgetState extends State<NewsWidget> {
   late NewsProvider newsProvider;
 
   @override
+  void didUpdateWidget(NewsWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Check if the source has changed
+    if (oldWidget.source.id != widget.source.id) {
+      // Fetch news for the new source ID
+      viewmodel.getNewsBySourceID(widget.source.id!);
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
     viewmodel.getNewsBySourceID(widget.source.id!);
