@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/providers/news_provider.dart';
 import 'package:news_app/ui/news/news_item_widget.dart';
 import 'package:news_app/ui/news/news_widget_viewModel.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +19,6 @@ class NewsWidget extends StatefulWidget {
 
 class _NewsWidgetState extends State<NewsWidget> {
   late NewsWidgetViewmodel viewmodel = NewsWidgetViewmodel();
-  late NewsProvider newsProvider;
 
   @override
   void didUpdateWidget(NewsWidget oldWidget) {
@@ -29,6 +27,7 @@ class _NewsWidgetState extends State<NewsWidget> {
     // Check if the source has changed
     if (oldWidget.source.id != widget.source.id) {
       // Fetch news for the new source ID
+      viewmodel.initNews();
       viewmodel.getNewsBySourceID(widget.source.id!);
     }
   }
@@ -36,6 +35,7 @@ class _NewsWidgetState extends State<NewsWidget> {
   @override
   void initState() {
     super.initState();
+    viewmodel.initNews();
     viewmodel.getNewsBySourceID(widget.source.id!);
   }
 
@@ -46,11 +46,6 @@ class _NewsWidgetState extends State<NewsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    newsProvider = Provider.of<NewsProvider>(context);
-
-    if (newsProvider.news.isEmpty) {
-      viewmodel.page = 1;
-    }
 
     return ChangeNotifierProvider(
         create: (context) => viewmodel,
@@ -71,16 +66,33 @@ class _NewsWidgetState extends State<NewsWidget> {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } else {
-            return ListView.builder(
-                itemCount: viewmodel.news!.length,
-                itemBuilder: (context, index) {
+        } else {
+          return ListView.builder(
+              itemBuilder: (context, index) {
+                if (index < viewmodel.news!.length) {
                   return NewsItemWidget(news: viewmodel.news![index]);
-                });
-          }
-        }));
+                } else {
+                  return !viewmodel.isEnd
+                      ? TextButton(
+                          onPressed: () {
+                            viewmodel.loadMoreEvent(widget.source.id!);
+                          },
+                          child: viewmodel.loadingMoreNews
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : const Text("Load More ....."),
+                        )
+                      : const SizedBox();
+                }
+              },
+              itemCount: viewmodel.news!.length + 1);
+        }
+      }),
+    );
   }
 }
+
 /*
       FutureBuilder<Newsmodel?>(
         future: ApiManger.getNewsBySourceID(widget.source.id!, page),

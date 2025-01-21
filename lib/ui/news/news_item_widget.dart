@@ -34,7 +34,8 @@ class NewsItemWidget extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: CachedNetworkImage(
-                imageUrl: news.urlToImage ?? "",
+                imageUrl: " " //news.urlToImage ?? "",
+                ,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     const CircularProgressIndicator(),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
