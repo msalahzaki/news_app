@@ -27,6 +27,7 @@ class NewsSourceScreen extends StatelessWidget {
                 child: BlocBuilder<SourceWidgetViewmodel, SourcesStates>(
                   builder: (context, state) {
                     return TabBar(
+                      tabAlignment: TabAlignment.start,
                       tabs: sourcesList.map((source) {
                         int index = sourcesList.indexOf(source);
                         return SourceNameItem(
