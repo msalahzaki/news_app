@@ -1,55 +1,53 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/api/api_manger.dart';
+import 'package:news_app/ui/news/Cubit/news_states.dart';
 
-import '../../model/Newsmodel.dart';
+import '../../../model/Newsmodel.dart';
 
-class NewsWidgetViewmodel extends ChangeNotifier {
+class NewsWidgetViewmodel extends Cubit<NewsStates> {
   int page = 1;
   bool isEnd = true;
   bool loadingMoreNews = false;
   List<News>? news;
   String? errorMessage;
 
+  NewsWidgetViewmodel() : super(NewsLoadingState());
+
   getNewsBySourceID(String sourceID) async {
+    page = 1;
+    isEnd = false;
     try {
+      emit(NewsLoadingState());
       Newsmodel? response = await ApiManger.getNewsBySourceID(sourceID, 1);
       if (response == null) {
         errorMessage = "Some Thing went wrong";
+        emit(NewsErrorState(errorMessage!));
       } else if (response.message != null) {
-        errorMessage = response.message;
+        emit(NewsErrorState(errorMessage!));
       } else {
         news = response.articles!;
         if (news!.length < 100) {
           isEnd = true;
         }
+        emit(NewsSuccessState(news));
       }
     } catch (e) {
       errorMessage = e.toString();
+      emit(NewsErrorState(errorMessage!));
     }
-    notifyListeners();
-  }
-
-  Future<void> changeSource(String sourceId) async {
-    try {
-      news = null; // To trigger loading spinner
-      notifyListeners();
-      await getNewsBySourceID(sourceId);
-    } catch (e) {
-      errorMessage = e.toString();
-      notifyListeners();
-    }
+    // notifyListeners();
   }
 
   initNews() {
     page = 1;
     news = null;
     isEnd = false;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void loadMoreEvent(String sourceId) async {
     loadingMoreNews = true;
-    notifyListeners();
+    //notifyListeners();
 
     page++;
     try {
@@ -63,11 +61,12 @@ class NewsWidgetViewmodel extends ChangeNotifier {
           isEnd = true;
         }
         news!.addAll(response.articles!);
+        emit(NewsSuccessState(news));
       }
     } catch (e) {
       errorMessage = e.toString();
     }
     loadingMoreNews = false;
-    notifyListeners();
+    // notifyListeners();
   }
 }

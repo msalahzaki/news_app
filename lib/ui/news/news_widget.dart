@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app/ui/news/Cubit/news_states.dart';
 import 'package:news_app/ui/news/news_item_widget.dart';
-import 'package:news_app/ui/news/news_widget_viewModel.dart';
-import 'package:provider/provider.dart';
 
 import '../../model/SourceResponse.dart';
+import 'news_widget_viewModel.dart';
 
 class NewsWidget extends StatefulWidget {
   const NewsWidget({
@@ -18,16 +19,13 @@ class NewsWidget extends StatefulWidget {
 }
 
 class _NewsWidgetState extends State<NewsWidget> {
-  late NewsWidgetViewmodel viewmodel = NewsWidgetViewmodel();
+  NewsWidgetViewmodel viewmodel = NewsWidgetViewmodel();
 
   @override
   void didUpdateWidget(NewsWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // Check if the source has changed
     if (oldWidget.source.id != widget.source.id) {
-      // Fetch news for the new source ID
-      viewmodel.initNews();
       viewmodel.getNewsBySourceID(widget.source.id!);
     }
   }
@@ -35,7 +33,6 @@ class _NewsWidgetState extends State<NewsWidget> {
   @override
   void initState() {
     super.initState();
-    viewmodel.initNews();
     viewmodel.getNewsBySourceID(widget.source.id!);
   }
 
@@ -46,30 +43,28 @@ class _NewsWidgetState extends State<NewsWidget> {
 
   @override
   Widget build(BuildContext context) {
-
-    return ChangeNotifierProvider(
-        create: (context) => viewmodel,
-        child:
-            Consumer<NewsWidgetViewmodel>(builder: (context, viewmodel, child) {
-          if (viewmodel.errorMessage != null) {
-            return Column(
-              children: [
-                const Text("SomeThing Wrong"),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {});
-                    },
-                    child: const Text("Try Again"))
-              ],
-            );
-          } else if (viewmodel.news == null) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-        } else {
+    return BlocBuilder<NewsWidgetViewmodel, NewsStates>(
+      bloc: viewmodel,
+      builder: (context, state) {
+        if (state is NewsErrorState) {
+          return Column(
+            children: [
+              Text(state.errorMessage),
+              ElevatedButton(
+                  onPressed: () {
+                    viewmodel.getNewsBySourceID(widget.source.id!);
+                  },
+                  child: const Text("Try Again"))
+            ],
+          );
+        } else if (state is NewsLoadingState) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is NewsSuccessState) {
           return ListView.builder(
               itemBuilder: (context, index) {
-                if (index < viewmodel.news!.length) {
+                if (index < state.news!.length) {
                   return NewsItemWidget(news: viewmodel.news![index]);
                 } else {
                   return !viewmodel.isEnd
@@ -86,9 +81,11 @@ class _NewsWidgetState extends State<NewsWidget> {
                       : const SizedBox();
                 }
               },
-              itemCount: viewmodel.news!.length + 1);
+              itemCount: state.news!.length + 1);
+        } else {
+          return SizedBox();
         }
-      }),
+      },
     );
   }
 }

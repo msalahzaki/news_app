@@ -1,51 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/model/SourceResponse.dart';
+import 'package:news_app/ui/home/sources_items/Cubit/source_widget_viewmodel.dart';
+import 'package:news_app/ui/home/sources_items/Cubit/sources_states.dart';
 import 'package:news_app/ui/home/sources_items/source_name_item.dart';
 import 'package:news_app/ui/news/news_widget.dart';
 import 'package:news_app/utils/app_color.dart';
 
-class NewsSourceScreen extends StatefulWidget {
+class NewsSourceScreen extends StatelessWidget {
   const NewsSourceScreen({super.key, required this.sourcesList});
 
   final List<Sources> sourcesList;
 
   @override
-  State<NewsSourceScreen> createState() => _NewsSourceScreenState();
-}
-
-class _NewsSourceScreenState extends State<NewsSourceScreen> {
-  int selectedIndex = 0;
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DefaultTabController(
-            length: widget.sourcesList.length,
-            child: TabBar(
-              tabs: widget.sourcesList.map((e) {
-                return SourceNameItem(
-                  source: e,
-                  isSelected: selectedIndex == widget.sourcesList.indexOf(e),
-                );
-              }).toList(),
-              onTap: (index) {
-                selectedIndex = index;
-                // Provider.of<NewsWidgetViewmodel>(context, listen: false).changeSource(widget.sourcesList[selectedIndex].id!);
-                setState(() {});
-              },
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              indicatorColor: Theme.of(context).colorScheme.secondary,
-              dividerColor: AppColor.transpernt,
-            )),
-        SizedBox(
-          height: 10,
-        ),
-        Expanded(
-          child: NewsWidget(source: widget.sourcesList[selectedIndex]),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => SourceWidgetViewmodel(),
+      child: BlocBuilder<SourceWidgetViewmodel, SourcesStates>(
+        builder: (context, state) {
+          final viewModel = context.read<SourceWidgetViewmodel>();
+
+          return Column(
+            children: [
+              DefaultTabController(
+                length: sourcesList.length,
+                child: BlocBuilder<SourceWidgetViewmodel, SourcesStates>(
+                  builder: (context, state) {
+                    return TabBar(
+                      tabs: sourcesList.map((source) {
+                        int index = sourcesList.indexOf(source);
+                        return SourceNameItem(
+                          source: source,
+                          isSelected: viewModel.currentSourceIndex == index,
+                        );
+                      }).toList(),
+                      onTap: (index) {
+                        viewModel.changeSource(index);
+                      },
+                      isScrollable: true,
+                      indicatorColor: Theme.of(context).colorScheme.secondary,
+                      dividerColor: AppColor.transpernt,
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: BlocBuilder<SourceWidgetViewmodel, SourcesStates>(
+                  builder: (context, state) {
+                    return NewsWidget(
+                      source: sourcesList[viewModel.currentSourceIndex],
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

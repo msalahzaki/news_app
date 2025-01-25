@@ -10,6 +10,7 @@ class ApiManger {
   static Future<SourceResponse?> getSources(String categoryID) async {
     Uri url = Uri.https(ApiConst.baseURL, EndPoints.sourceApi,
         {'apiKey': ApiConst.apiKey, 'category': categoryID});
+    print(url);
     try {
       var response = await http.get(url);
       var json = jsonDecode(response.body);

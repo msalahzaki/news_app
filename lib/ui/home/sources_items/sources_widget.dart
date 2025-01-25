@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/model/category_model.dart';
-import 'package:news_app/ui/home/sources_items/source_widget_viewmodel.dart';
+import 'package:news_app/ui/home/sources_items/Cubit/source_widget_viewmodel.dart';
+import 'package:news_app/ui/home/sources_items/Cubit/sources_states.dart';
 import 'package:news_app/ui/news/news_source_screen.dart';
-import 'package:provider/provider.dart';
 
 class SourcesWidget extends StatefulWidget {
   const SourcesWidget({super.key, required this.categoryModel});
@@ -19,38 +20,38 @@ class _SourcesWidgetState extends State<SourcesWidget> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
     viewmodel.getSourcesByCategoryID(widget.categoryModel.id);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => viewmodel,
-      child: Consumer<SourceWidgetViewmodel>(
-        builder: (context, viewmodel, child) {
-          if (viewmodel.errorMessage != null) {
-            return Column(
-              children: [
-                const Text("SomeThing Wrong"),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {});
-                    },
-                    child: const Text("Try Again"))
-              ],
-            );
-          } else if (viewmodel.sources == null) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return NewsSourceScreen(
-              sourcesList: viewmodel.sources!,
-            );
-          }
-        },
-      ),
+    return BlocBuilder<SourceWidgetViewmodel, SourcesStates>(
+      bloc: viewmodel,
+      builder: (context, state) {
+        if (state is SourceErrorState) {
+          return Column(
+            children: [
+              const Text("SomeThing Wrong"),
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {});
+                  },
+                  child: const Text("Try Again"))
+            ],
+          );
+        } else if (state is SourceLoadingState) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is SourceSuccessState) {
+          return NewsSourceScreen(
+            sourcesList: state.sources!,
+          );
+        } else {
+          return SizedBox();
+        }
+      },
     );
 
     /*
