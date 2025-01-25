@@ -18,16 +18,14 @@ class NewsSourceScreen extends StatelessWidget {
       create: (context) => SourceWidgetViewmodel(),
       child: BlocBuilder<SourceWidgetViewmodel, SourcesStates>(
         builder: (context, state) {
-          final viewModel = context.read<SourceWidgetViewmodel>();
+          final viewModel = BlocProvider.of<SourceWidgetViewmodel>(context);
 
           return Column(
             children: [
               DefaultTabController(
                 length: sourcesList.length,
-                child: BlocBuilder<SourceWidgetViewmodel, SourcesStates>(
-                  builder: (context, state) {
-                    return TabBar(
-                      tabAlignment: TabAlignment.start,
+                  child: TabBar(
+                    tabAlignment: TabAlignment.start,
                       tabs: sourcesList.map((source) {
                         int index = sourcesList.indexOf(source);
                         return SourceNameItem(
@@ -41,20 +39,12 @@ class NewsSourceScreen extends StatelessWidget {
                       isScrollable: true,
                       indicatorColor: Theme.of(context).colorScheme.secondary,
                       dividerColor: AppColor.transpernt,
-                    );
-                  },
-                ),
-              ),
+                  )),
               const SizedBox(height: 10),
               Expanded(
-                child: BlocBuilder<SourceWidgetViewmodel, SourcesStates>(
-                  builder: (context, state) {
-                    return NewsWidget(
-                      source: sourcesList[viewModel.currentSourceIndex],
-                    );
-                  },
-                ),
-              ),
+                  child: NewsWidget(
+                source: sourcesList[viewModel.currentSourceIndex],
+              )),
             ],
           );
         },
