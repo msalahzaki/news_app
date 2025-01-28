@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/ui/news/Cubit/news_states.dart';
 import 'package:news_app/ui/news/news_item_widget.dart';
 
+import '../../di/di.dart';
 import '../../model/SourceResponse.dart';
-import 'news_widget_viewModel.dart';
+import 'Cubit/news_widget_viewModel.dart';
 
 class NewsWidget extends StatefulWidget {
   const NewsWidget({
@@ -19,7 +20,8 @@ class NewsWidget extends StatefulWidget {
 }
 
 class _NewsWidgetState extends State<NewsWidget> {
-  NewsWidgetViewmodel viewmodel = NewsWidgetViewmodel();
+  NewsWidgetViewmodel viewmodel =
+      NewsWidgetViewmodel(newsRepository: injectNewsReposatory());
 
   @override
   void didUpdateWidget(NewsWidget oldWidget) {
@@ -83,79 +85,9 @@ class _NewsWidgetState extends State<NewsWidget> {
               },
               itemCount: state.news!.length + 1);
         } else {
-          return SizedBox();
+          return const SizedBox();
         }
       },
     );
   }
 }
-
-/*
-      FutureBuilder<Newsmodel?>(
-        future: ApiManger.getNewsBySourceID(widget.source.id!, page),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting &&
-              page == 1) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Column(
-              children: [
-                const Text("SomeThing Wrong"),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {});
-                    },
-                    child: const Text("Try Again"))
-              ],
-            );
-          } else if (snapshot.data!.status != "ok" && page == 1) {
-            return Column(
-              children: [
-                Text(snapshot.data!.message ?? ""),
-                ElevatedButton(
-                    onPressed: () {
-                      setState(() {});
-                    },
-                    child: const Text("Try Again"))
-              ],
-            );
-          } else {
-            if (snapshot.data!.articles != null &&
-                snapshot.data!.articles!.isNotEmpty &&
-                snapshot.connectionState != ConnectionState.waiting) {
-              Provider.of<NewsProvider>(context, listen: false)
-                  .addMoreEvent(snapshot.data!.articles!);
-              loadingMoreNews = false;
-              // newsProvider.addMoreEvent(snapshot.data!.articles!);
-
-              if (snapshot.data!.articles!.length < 100) {
-                isEnd = true;
-              } else {
-                isEnd = false;
-              }
-            }
-            return ListView.builder(
-                itemBuilder: (context, index) {
-                  if (index < newsProvider.news.length) {
-                    return NewsItemWidget(news: newsProvider.news[index]);
-                  } else {
-                    return !isEnd
-                        ? TextButton(
-                            onPressed: () {
-                              _onScroll();
-                            },
-                            child: loadingMoreNews
-                                ? const Center(
-                                    child: CircularProgressIndicator(),
-                                  )
-                                : const Text("Load More ....."),
-                          )
-                        : const SizedBox();
-                  }
-                },
-                itemCount: newsProvider.news.length + 1);
-          }
-        });
-        */

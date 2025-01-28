@@ -7,6 +7,8 @@ import 'package:news_app/ui/home/sources_items/source_name_item.dart';
 import 'package:news_app/ui/news/news_widget.dart';
 import 'package:news_app/utils/app_color.dart';
 
+import '../../di/di.dart';
+
 class NewsSourceScreen extends StatelessWidget {
   const NewsSourceScreen({super.key, required this.sourcesList});
 
@@ -15,7 +17,8 @@ class NewsSourceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SourceWidgetViewmodel(),
+      create: (context) =>
+          SourceWidgetViewmodel(sourcesRepository: injectSourceRepository()),
       child: BlocBuilder<SourceWidgetViewmodel, SourcesStates>(
         builder: (context, state) {
           final viewModel = BlocProvider.of<SourceWidgetViewmodel>(context);

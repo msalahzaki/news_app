@@ -17,7 +17,7 @@ class _NewsSearchState extends State<NewsSearch> {
   List<News> news = [];
   String status = "";
   bool isLoading = false;
-
+  ApiManger apiManger = ApiManger();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +71,7 @@ class _NewsSearchState extends State<NewsSearch> {
     setState(() {});
     String searchText = searchEditingController.text;
     if (searchText.isNotEmpty) {
-      Newsmodel newsModel = await ApiManger.getNewsBySearch(searchText, 1);
+      Newsmodel newsModel = await apiManger.getNewsBySearch(searchText, 1);
       if (newsModel.status == "ok" && newsModel.articles!.isNotEmpty) {
         news = newsModel.articles!;
       } else {
