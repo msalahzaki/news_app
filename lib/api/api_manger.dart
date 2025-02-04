@@ -14,6 +14,7 @@ class ApiManger {
     try {
       var response = await http.get(url);
       var json = jsonDecode(response.body);
+
       return SourceResponse.fromJson(json);
     } catch (e) {
       return null;

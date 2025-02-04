@@ -1,15 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive/hive.dart';
 import 'package:news_app/providers/language_provider.dart';
 import 'package:news_app/providers/news_provider.dart';
 import 'package:news_app/providers/theme_provider.dart';
 import 'package:news_app/ui/home/home.dart';
 import 'package:news_app/utils/BlocObserver.dart';
 import 'package:news_app/utils/app_theme.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Directory appDocDir = await getApplicationDocumentsDirectory();
+  Hive.init(appDocDir.path);
   Bloc.observer = MyBlocObserver();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => LanguageProvider()),

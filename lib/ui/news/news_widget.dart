@@ -21,7 +21,7 @@ class NewsWidget extends StatefulWidget {
 
 class _NewsWidgetState extends State<NewsWidget> {
   NewsWidgetViewmodel viewmodel =
-      NewsWidgetViewmodel(newsRepository: injectNewsReposatory());
+      NewsWidgetViewmodel(newsRepository: injectNewsRepository());
 
   @override
   void didUpdateWidget(NewsWidget oldWidget) {

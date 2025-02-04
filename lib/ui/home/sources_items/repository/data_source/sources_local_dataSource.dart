@@ -1,5 +1,7 @@
 import '../../../../../model/SourceResponse.dart';
 
-abstract class SourcesDataSource {
+abstract class SourcesLocalDatasource {
   Future<SourceResponse?> getSources(String categoryID);
+
+  void saveLocalSources(SourceResponse? sources, String categoryID);
 }

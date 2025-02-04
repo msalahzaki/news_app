@@ -16,6 +16,7 @@ class SourceWidgetViewmodel extends Cubit<SourcesStates> {
     try {
       emit(SourceLoadingState());
       var response = await sourcesRepository.getSources(categoryID);
+
       if (response == null) {
         emit(SourceErrorState("SomeThing Went Wrong"));
       } else if (response.message != null) {
@@ -26,6 +27,7 @@ class SourceWidgetViewmodel extends Cubit<SourcesStates> {
         currentSourceIndex = 0;
       }
     } catch (e) {
+      print(e);
       emit(SourceErrorState(e.toString()));
     }
   }
